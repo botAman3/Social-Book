@@ -4,4 +4,4 @@ from django.http import HttpResponse
 
 
 def index(request):
-    return HttpResponse("<h1>welcome to Social book </h1>")
+    return render(request, 'index.html')
