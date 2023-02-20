@@ -18,15 +18,11 @@
 
 <body>
 
-
-       
-
-          
-
             <div class="container m-auto"> 
 
-                <h1 class="text-2xl leading-none text-gray-900 tracking-tight mt-3"> Account Setting </h1>
-                <ul class="mt-5 -mr-3 flex-nowrap lg:overflow-hidden overflow-x-scroll uk-tab">
+                <h1 class="text-2xl leading-none text-gray-900 tracking-tight mt-3"> 
+                    <a href="/">HOME </a> / Account Setting for <b>{{user.username}}</b> </h1>
+                {% comment %} <ul class="mt-5 -mr-3 flex-nowrap lg:overflow-hidden overflow-x-scroll uk-tab">
                     <li class="uk-active"><a href="#">General</a></li>
                     <li><a href="#">Profile</a></li>
                     <li><a href="#">Privacy</a></li>
@@ -34,17 +30,20 @@
                     <li><a href="#">Social links</a></li>
                     <li><a href="#">Billing</a></li>
                     <li><a href="#">Security</a></li>
-                </ul>
+                </ul> {% endcomment %}
 
+                <br><br>
+                    <hr>
                 <div class="grid lg:grid-cols-3 mt-12 gap-8">
                     <div>
-                        <h3 class="text-xl mb-2"> Basic</h3>
+                        <h3 class="text-xl mb-2"> General</h3>
                         <p></p>
                     </div>
                     <div class="bg-white rounded-md lg:shadow-lg shadow col-span-2">
-    
+                        <form action="" method="POST" enctype = "multipart/form-data">
+                            {% csrf_token %}
                        <div class="grid grid-cols-2 gap-3 lg:p-6 p-4">
-                           <div>
+                          <!-- <div>
                                <label for=""> First name</label>
                                <input type="text" placeholder="Your name.." class="shadow-none bg-gray-100">
                            </div>
@@ -56,14 +55,25 @@
                                 <label for=""> Email</label>
                                 <input type="text" placeholder="Your name.." class="shadow-none bg-gray-100">
                             </div>
+                            -->
                             <div class="col-span-2">
-                                <label for="about">About me</label>  
-                                <textarea id="about" name="about" rows="3"  class="shadow-none bg-gray-100"></textarea>
+                                <label for=""> Profile Image</label>
+                                <img src="{{user_profile.profileImg.url}}" alt="">
+                                <input type="file"  name ="image" value="{{user_profile.profileImg}}" class="shadow-none bg-gray-100">
+                            </div>
+                            <div class="col-span-2">
+                                <label for="bio">Bio</label>  
+                                <textarea id="bio" name="bio" rows="3"  class="shadow-none bg-gray-100">
+                                    {{user_profile.bio}}
+                                </textarea>
                             </div> 
                             <div class="col-span-2">
-                                <label for=""> Location</label>
-                                <input type="text" placeholder="" class="shadow-none bg-gray-100">
+                                <label for="location"> Location</label>
+                                <input type="text" name ="location"  id="location" 
+                                value = " {{user_profile.location}}"
+                                placeholder="" class="shadow-none bg-gray-100">
                             </div>
+                            <!--
                             <div>
                                <label for=""> Working at</label>
                                <input type="text" placeholder="" class="shadow-none bg-gray-100">
@@ -78,16 +88,18 @@
                                 <option value="4">Engaged</option>
                               </select>
                             </div>
+                            -->
                        </div> 
+                    
     
                        <div class="bg-gray-10 p-6 pt-0 flex justify-end space-x-3">
-                           <button class="p-2 px-4 rounded bg-gray-50 text-red-500"> Cancel </button>
-                           <button type="button" class="button bg-blue-700"> Save </button>
+                           <button class="p-2 px-4 rounded bg-gray-50 text-red-500"> <a href="/">Cancel </a> </button>
+                           <button type="submit" class="button bg-blue-700"> Save </button>
                        </div>
-    
+                    </form>
                     </div>
 
-                    <div>
+                    {% comment %} <div>
                         <h3 class="text-xl mb-2"> Privacy</h3>
                         <p> </p>
                     </div>
@@ -140,10 +152,10 @@
                                     <label class="switch"><input type="checkbox"><span class="switch-button"></span> </label>
                                 </div>
                             </div>
-                        </div>
+                        </div> 
                     </div>
     
-                    </div>
+                    </div>{% endcomment %}
                     <br>
 
                 </div>

@@ -2,14 +2,17 @@ from django.shortcuts import render , redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User 
 from django.contrib import auth
-from .models import Profile 
+from .models import Profile, Post
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 @login_required(login_url='signin')
 def index(request):
-    return render(request, 'index.html')
+    user_obj = User.objects.get(username = request.user.username)
+    user_profile = Profile.objects.get(user = user_obj)
+    
+    return render(request, 'index.html' , {'user_profile' : user_profile})
 
 def signUp(request):
 
@@ -30,18 +33,22 @@ def signUp(request):
                 user = User.objects.create_user(username=username , email= email , password= password)
                 user.save()
 
+                user_login = auth.authenticate(username , password)
+                auth.login(request, user_login)
                 # log the user in and redirect to settings page
 
 
                 user_model = User.objects.get(username= username)
                 new_profile = Profile.objects.create(user = user_model , id_user = user_model.id)
                 new_profile.save()
-                return redirect('/')
+                return redirect('settings')
         else :
             messages.info(request , "Password not matching")
             return redirect('signup')
     else :
         return render(request , 'signup.html')
+
+        
 @login_required(login_url='signin')
 def logout(request):
     auth.logout(request)
@@ -57,9 +64,46 @@ def signIn(request):
 
         if user is not None :
             auth.login(request , user)
-            return redirect('home')
+            return redirect('index')
         else:
             messages.info(request , 'Credentials Invalid')
             return redirect('signin')
     else :
-        return render(request , 'signin.html')    
+        return render(request , 'signin.html') 
+
+@login_required(login_url='signin')
+def settings(request):
+
+    user_profile = Profile.objects.get(user = request.user)
+
+    if request.method == 'POST':
+        
+        image = user_profile.profileImg
+           
+        if request.FILES.get('image') != None:
+            image = request.FILES.get('image')
+        
+        bio = request.POST['bio']
+        location = request.POST['location']
+        user_profile.profileImg = image 
+        user_profile.bio = bio 
+        user_profile.location = location
+
+        user_profile.save()
+
+        return redirect('settings')
+    return render(request,'setting.html' , {'user_profile' : user_profile})
+
+@login_required(login_url='signin')
+def upload(request):
+
+    if request.method == "POST":
+        user = request.user.username 
+        image = request.FILES.get('imageUpload')  
+        caption = request.POST['caption']
+
+        newPost = Post.objects.create(user = user , image = image , caption = caption)
+        newPost.save()
+        return redirect('index')
+    else : 
+        return redirect('index')
